@@ -1,13 +1,12 @@
 from telebot import TeleBot
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton
-from reporsitory.webshop.bot import config
+# import config
+import models, keyboards
+from models import Text, Products
+from keyboards import START_KB
 
-from ..db import models
-from ..db.models import Text, Products
-from .keyboards import START_KB
 
-
-bot = TeleBot(config.TOKEN)
+bot = TeleBot("1155368557:AAFKQ1HoAJKffzFOyzD7IFUwIHpCQwT8v_k")
 
 
 @bot.message_handler(commands=['start'])
@@ -18,6 +17,8 @@ def start(message):
     kb.add(*[KeyboardButton(text=text) for text in START_KB.values()])
 
     bot.send_message(message.chat.id, txt, reply_markup=kb)
+
+
 
 
 
