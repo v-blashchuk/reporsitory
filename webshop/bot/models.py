@@ -10,6 +10,41 @@ class Category(me.Document):
     subcategories = me.ListField(me.ReferenceField('self'))
     parent = me.ReferenceField('self', default=None)
 
+    @classmethod
+    def get_root_category(cls):
+        cls.objects()
+
+    @property
+    def is_parent(self):
+        return bool(self.subcategories)
+
+    def get_products(self):
+        Products.objects(category=self)
+
+
+class Cart(me.Document):
+    poduct_1 = me.ListField(min_length=2 ,max_length=4096)
+    quantity_1 = me.FloatField(default=0)    
+    poduct_2 = me.ListField(min_length=2 ,max_length=4096)
+    quantity_2 = me.FloatField(default=0)    
+    poduct_3 = me.ListField(min_length=2 ,max_length=4096)
+    quantity_3 = me.FloatField(default=0)    
+    poduct_4 = me.ListField(min_length=2 ,max_length=4096)
+    quantity_4 = me.FloatField(default=0)    
+    poduct_5 = me.ListField(min_length=2 ,max_length=4096)
+    quantity_5 = me.FloatField(default=0)    
+    poduct_6 = me.ListField(min_length=2 ,max_length=4096)
+    quantity_6 = me.FloatField(default=0)    
+    poduct_7 = me.ListField(min_length=2 ,max_length=4096)
+    quantity_7 = me.FloatField(default=0)    
+    poduct_8 = me.ListField(min_length=2 ,max_length=4096)
+    quantity_8 = me.FloatField(default=0)    
+    poduct_9 = me.ListField(min_length=2 ,max_length=4096)
+    quantity_9 = me.FloatField(default=0)
+    poduct_10 = me.ListField(min_length=2 ,max_length=4096)
+    quantity_10 = me.FloatField(default=0)
+
+
 
 class Products(me.Document):
     title = me.StringField(min_length=1, max_length=512)
@@ -17,10 +52,27 @@ class Products(me.Document):
     created = me.DateField(default=datetime.datetime.now())
     price = me.DecimalField(required=True)
     in_stock = me.BooleanField(default=True)
-    discount = me.IntField(min_value=0, max_value=100)
-    image = me.FileField(required=False)
+    discount = me.IntField(min_value=0, max_value=100, default=0)
+    image = me.FileField(required=False, default=None)
     category = me.ReferenceField(Category)
 
+    @property
+    def extended_price(self):
+        return self.price * (100 - self.discount) / 100
+
+    @classmethod
+    def get_discount_products(cls):
+        return cls.objects(discount__ne=0, in_stock=True)
+
+    @classmethod
+    def get_category_products(cls, category):
+        return cls.objects(category=category)
+
+class User(me.Document):
+    name = me.StringField(min_length=1, max_length=50)
+    company = me.StringField(min_length=1, max_length=50)
+    adress_company = me.StringField(min_length=1, max_length=100)
+    telephone = me.IntField(min_value=0, max_value=20)
 
 class Text(me.Document):
 
@@ -33,9 +85,40 @@ class Text(me.Document):
 
 
 def fill_db():
-    # Text.objects.create(title='Текст приветствия', body='Приветствую Вас в магазине!')
-    # Text.objects.create(title='Текст приветствия', body='Рады Вас видеть в нашем магазине!')
-    Text.objects.create(title='Текст корзины', body='Вы перейшли в Корзину!')
+    Products.objects.create(title='Помидор', description='Помидор крассный', price=100 , category='Овощи')
+    Products.objects.create(title='Огурец', description='Огурцец стандартный', price=190 , category='Овощи')
+    Products.objects.create(title='Баклажан', description='Баклажан стандартный', price=10 , category='Овощи')
+    Products.objects.create(title='Морковь', description='Морковь стандартная', price=11 , category='Овощи')
+    Products.objects.create(title='Капуста', description='Капуста стандартная', price=16 , category='Овощи')
+    Products.objects.create(title='Яблоко', description='Яблоко РедГолд', price=100 , category='Фрукты')
+    Products.objects.create(title='Груша', description='Груша украинская', price=200 , category='Фрукты')
+    Products.objects.create(title='Виноград', description='Виноград КишьМышь', price=250 , category='Фрукты')
+    Products.objects.create(title='Слива', description='Слива большая', price=345 , category='Фрукты')
+    Products.objects.create(title='Укроп', description='Укроп', price=20 , category='Зелень')
+    Products.objects.create(title='Петрушка', description='Петрушка', price=100 , category='Зелень')
+    Products.objects.create(title='Руккола', description='Руккола', price=100 , category='Зелень')
+    Products.objects.create(title='Базилик', description='Базилик', price=100 , category='Зелень')
+    Products.objects.create(title='Тимьян', description='Тимьян', price=100 , category='Зелень')
+    Products.objects.create(title='Розмарин', description='Розмарин', price=100 , category='Зелень')
+    Products.objects.create(title='Апельсин', description='Апельсин', price=100 , category='Цитрусы')
+    Products.objects.create(title='Лимон', description='Лимон', price=100 , category='Цитрусы')
+    Products.objects.create(title='Манго', description='Манго', price=100 , category='Цитрусы')
+    Products.objects.create(title='Авокадо', description='Авокадо', price=100 , category='Цитрусы')
+    Products.objects.create(title='Ананас', description='Ананас', price=100 , category='Цитрусы')
+    Products.objects.create(title='Лайм', description='Лайм', price=100 , category='Цитрусы')
+    Products.objects.create(title='Томат в соб. соку', description='Томат в собственном соку', price=100 , category='Консервация')
+    Products.objects.create(title='Огурец сол.', description='Огурец соленый', price=100 , category='Консервация')
+    Products.objects.create(title='Ананас консерв.', description='Ананас консервированный', price=100 , category='Консервация')
+    Products.objects.create(title='Томат', description='Томат', price=100 , category='Консервация')
+    Products.objects.create(title='Кетчуп', description='Кетчуп', price=100 , category='Консервация')
+    Products.objects.create(title='Топинг малин.', description='Топинг малиновый', price=100 , category='Консервация')
+    Products.objects.create(title='Соль', description='Соль 1кг', price=100 , category='Бакалея, крупы, яйцо')
+    Products.objects.create(title='Сахар', description='Сахар 1кг', price=100 , category='Бакалея, крупы, яйцо')
+    Products.objects.create(title='Мука', description='Мука 5кг', price=100 , category='Бакалея, крупы, яйцо')
+    Products.objects.create(title='Рис басм.', description='Рис басмати', price=100 , category='Бакалея, крупы, яйцо')
+    Products.objects.create(title='Крохмал кукур.', description='Крохмал кукурузный', price=100 , category='Бакалея, крупы, яйцо')
+    Products.objects.create(title='Яйцо кур.', description='Яйцо куриное', price=100 , category='Бакалея, крупы, яйцо')
+    Products.objects.create(title='Масло подс.', description='Масло подсолнечное', price=100 , category='Бакалея, крупы, яйцо')
 
 
 if __name__ == '__main__':
