@@ -23,26 +23,10 @@ class Category(me.Document):
 
 
 class Cart(me.Document):
-    poduct_1 = me.ListField(min_length=2 ,max_length=4096)
-    quantity_1 = me.FloatField(default=0)    
-    poduct_2 = me.ListField(min_length=2 ,max_length=4096)
-    quantity_2 = me.FloatField(default=0)    
-    poduct_3 = me.ListField(min_length=2 ,max_length=4096)
-    quantity_3 = me.FloatField(default=0)    
-    poduct_4 = me.ListField(min_length=2 ,max_length=4096)
-    quantity_4 = me.FloatField(default=0)    
-    poduct_5 = me.ListField(min_length=2 ,max_length=4096)
-    quantity_5 = me.FloatField(default=0)    
-    poduct_6 = me.ListField(min_length=2 ,max_length=4096)
-    quantity_6 = me.FloatField(default=0)    
-    poduct_7 = me.ListField(min_length=2 ,max_length=4096)
-    quantity_7 = me.FloatField(default=0)    
-    poduct_8 = me.ListField(min_length=2 ,max_length=4096)
-    quantity_8 = me.FloatField(default=0)    
-    poduct_9 = me.ListField(min_length=2 ,max_length=4096)
-    quantity_9 = me.FloatField(default=0)
-    poduct_10 = me.ListField(min_length=2 ,max_length=4096)
-    quantity_10 = me.FloatField(default=0)
+    poducts = me.ListField(min_length=2 ,max_length=4096)
+    quantity = me.FloatField(default=0)   
+    price = me.float() 
+
 
 
 

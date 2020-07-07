@@ -12,7 +12,7 @@ from telebot.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMar
 from . import models, keyboards
 from .models import Text, Products, Category
 from .keyboards import START_KB, CATEGORIES_KB
-from .lookups import category_lookup, separator, product_lookup, korzina_lookup
+from .lookups import category_lookup, separator, product_lookup, korzina_lookup, prod_discount_lookup
 
 
 bot = TeleBot("1155368557:AAFKQ1HoAJKffzFOyzD7IFUwIHpCQwT8v_k")
@@ -72,7 +72,25 @@ def cart(message):
 
 @bot.message_handler(content_types=['text'], func=lambda message: message.text == START_KB['discount_products'])
 def discount_products(message):
-    bot.send_message(message.chat.id, "Товары со скидкой:")
+
+    kb = InlineKeyboardMarkup(row_width=2)
+    buttons = [InlineKeyboardButton(f'{prod.title} -{prod.discount}%', callback_data=f'{prod_discount_lookup}{separator}{prod.id}') for prod in Products.objects(discount__ne=0, in_stock=True)]
+    kb.add(*buttons)
+    bot.send_message(message.chat.id, text="Товары со скидкой:", reply_markup=kb)
+
+
+@bot.callback_query_handler(func=lambda call: call.data.split(separator)[0] == prod_discount_lookup)
+def prod_discount__click(call):
+    print(call.data)
+    prod_id = call.data.split(separator)[1]
+    print(prod_id)
+    kb = InlineKeyboardMarkup()
+    product = Products.objects.get(id=prod_id)
+    button = [InlineKeyboardButton(f'Заказать - {product.title}', callback_data=f'{korzina_lookup}{separator}{product.id}')]
+    kb.add(*button)
+    bot.send_message(call.message.chat.id, f"Описание товара:\n\nНазвание товара: {product.title}\nОписание товара: {product.description}\nЦена товара: {product.price}\nСкидка на товар: {product.discount}", reply_markup=kb)
+
+
 
 
 
