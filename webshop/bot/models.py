@@ -4,6 +4,14 @@ import datetime
 me.connect('webshop_bot_new')
 
 
+class User(me.Document):
+    name = me.StringField(min_length=1, max_length=50)
+    company = me.StringField(min_length=1, max_length=50)
+    adress_company = me.StringField(min_length=1, max_length=100)
+    telephone = me.IntField(min_value=0, max_value=20)
+    chat_id = me.ObjectIdField(required=True)
+
+
 class Category(me.Document):
     title = me.StringField(min_length=1, max_length=512)
     description = me.StringField(min_length=2, max_length=4096)
@@ -23,9 +31,20 @@ class Category(me.Document):
 
 
 class Cart(me.Document):
-    poducts = me.ListField(min_length=2 ,max_length=4096)
-    quantity = me.FloatField(default=0)   
-    price = me.float() 
+    chat_id = me.IntField(me_field='id')
+    products = me.ListField(min_length=2 ,max_length=4096)
+    quantity = me.ListField(min_length=2 ,max_length=4096)   
+    price = me.FloatField(default=0) 
+    date = me.DateTimeField(default=datetime.datetime.now())
+    finish = me.BooleanField(default=False)
+    
+
+
+    def active_cart(self, chat_id):
+        Cart.objects.get(chat_id=chat_id, finish=False)
+
+    def add_product(self, cart, product_id):
+        pass
 
 
 
@@ -52,11 +71,7 @@ class Products(me.Document):
     def get_category_products(cls, category):
         return cls.objects(category=category)
 
-class User(me.Document):
-    name = me.StringField(min_length=1, max_length=50)
-    company = me.StringField(min_length=1, max_length=50)
-    adress_company = me.StringField(min_length=1, max_length=100)
-    telephone = me.IntField(min_value=0, max_value=20)
+
 
 class Text(me.Document):
 
