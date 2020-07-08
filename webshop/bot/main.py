@@ -12,7 +12,7 @@ from telebot.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMar
 from . import models, keyboards
 from .models import Text, Products, Category, Cart, User
 from .keyboards import START_KB, CATEGORIES_KB
-from .lookups import category_lookup, separator, product_lookup, korzina_lookup, prod_discount_lookup
+from .lookups import category_lookup, separator, product_lookup, korzina_lookup, prod_discount_lookup, cart_lookup, order_lookup
 
 
 bot = TeleBot("1155368557:AAFKQ1HoAJKffzFOyzD7IFUwIHpCQwT8v_k")
@@ -41,6 +41,31 @@ def cart(message):
 
     except Exception:
         bot.send_message(message.chat.id, f"Ваша корзина на данный момент пуста!")
+
+    kb = InlineKeyboardMarkup()
+    button_1 = InlineKeyboardButton("Очистить Корзину", callback_data=f'{cart_lookup}{separator}{chat_id}')
+    button_2 = InlineKeyboardButton("Отправить заказ!", callback_data=f'{order_lookup}{separator}{chat_id}')
+    kb.add(button_1, button_2)
+    bot.send_message(message.chat.id, text="Выберите действие с корзиной:", reply_markup=kb)
+
+
+@bot.callback_query_handler(func=lambda call: call.data.split(separator)[0] ==cart_lookup)
+def cart_clear(call):
+    chat_id=call.from_user.id
+    current_cart = Cart.objects.get(chat_id=chat_id, finish=False)
+    current_cart.update(set__products=[])
+    current_cart.update(set__quantity=[])
+    current_cart.save()
+    bot.send_message(call.message.chat.id, f"Корзина очищена!")
+
+
+@bot.callback_query_handler(func=lambda call: call.data.split(separator)[0] ==order_lookup)
+def cart_order(call):
+    chat_id=call.from_user.id
+    current_cart = Cart.objects.get(chat_id=chat_id, finish=False)
+    current_cart.update(set__finish=True)
+    current_cart.save()
+    bot.send_message(call.message.chat.id, f"Заказ отправлен!\nС вами свяжется менеджер, спасибо.")
 
 
 @bot.message_handler(content_types=['text'], func=lambda message: message.text == START_KB['discount_products'])
