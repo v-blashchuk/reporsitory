@@ -5,11 +5,14 @@ me.connect('webshop_bot_new')
 
 
 class User(me.Document):
+    user_id = me.IntField(me_field='id')
     name = me.StringField(min_length=1, max_length=50)
+    first_name = me.StringField(min_length=1, max_length=50)
+    last_name = me.StringField(min_length=1, max_length=50)
     company = me.StringField(min_length=1, max_length=50)
-    adress_company = me.StringField(min_length=1, max_length=100)
-    telephone = me.IntField(min_value=0, max_value=20)
-    chat_id = me.ObjectIdField(required=True)
+    address_company = me.StringField(min_length=1, max_length=100)
+    telephone = me.StringField(min_length=1, max_length=100)
+
 
 
 class Category(me.Document):

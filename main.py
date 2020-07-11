@@ -11,5 +11,4 @@ app = Flask(__name__)
 start_bot()
 
 if __name__ == '__main__':
-    app.run(debug=True)
     start_bot()

@@ -36,7 +36,9 @@ def cart(message):
             dict[name]=q
         print(dict)
         bot.send_message(message.chat.id, f"Товары в корзине:")
+        bot.send_message(message.chat.id, f"----------------------")
         msg = [bot.send_message(message.chat.id, f"{name} - {quant} (шт/кг)\n ") for name, quant in dict.items()]
+        bot.send_message(message.chat.id, f"----------------------")
         dict.clear()
 
     except Exception:
@@ -129,7 +131,7 @@ def zakaz_click(call):
     bot.register_next_step_handler(msg, get_quantity)
 
 
-@bot.message_handler(content_types=['text'])
+@bot.message_handler(content_types=['text'], func=lambda message: message.text != '/start')
 def get_quantity(message):
     print(message)
     quantity = message.text
@@ -159,8 +161,14 @@ def start(message):
     kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
     kb.add(*[KeyboardButton(text=text) for text in START_KB.values()])
     bot.send_message(message.chat.id, txt, reply_markup=kb)
-    msg = bot.send_message(message.chat.id, 'Давайте пройдем быструю регистрацию, перед началом покупок.\nПожалуйста, введите свое имя:')
-    bot.register_next_step_handler(msg, get_name_step)
+    user_id = message.from_user.id
+    try:
+        new_user = User.objects.get(user_id=user_id)
+        name = new_user.name
+        bot.send_message(message.chat.id, f"{name}, вы уже зарегистрированы в магазине, приступайте к заказу товара!", reply_markup=kb)
+    except Exception:
+        msg = bot.send_message(message.chat.id, 'Давайте пройдем быструю регистрацию, перед началом покупок.\nПожалуйста, введите свое имя:')
+        bot.register_next_step_handler(msg, get_name_step)
 
 
 @bot.message_handler(content_types=['text'])
@@ -170,6 +178,8 @@ def get_name_step(message):
     first_name = message.from_user.first_name
     last_name = message.from_user.last_name
     user_id = message.from_user.id
+    new_user = User.objects.create(user_id=user_id, name=name, first_name=first_name, last_name=last_name)
+    new_user.save()
     print(name, first_name, last_name, user_id)
     msg = bot.reply_to(message, f"Спасибо, {name}!\nВведите ваш контактный номер телефона:" )
     bot.register_next_step_handler(msg, get_telephone)
@@ -178,8 +188,12 @@ def get_name_step(message):
 @bot.message_handler(content_types=['text'])
 def get_telephone(message):
     print(message)
-    telephone = message.text
+    telephone = str(message.text)
+    user_id = message.from_user.id
     print(telephone)
+    new_user = User.objects.get(user_id=user_id)
+    new_user.update(telephone=telephone)
+    new_user.save()
     msg = bot.reply_to(message, f"Спасибо!\nВведите компанию где работаете:" )
     bot.register_next_step_handler(msg, get_company_name)
 
@@ -189,6 +203,10 @@ def get_telephone(message):
 def get_company_name(message):
     print(message)
     company_name = message.text
+    user_id = message.from_user.id
+    new_user = User.objects.get(user_id=user_id)
+    new_user.update(company=company_name)
+    new_user.save()
     msg = bot.reply_to(message, f"Отлично!\nТеперь введите адрес куда нужно будет доставлять заказы:")
     bot.register_next_step_handler(msg, get_address)
 
@@ -196,6 +214,11 @@ def get_company_name(message):
 @bot.message_handler(content_types=['text'])
 def get_address(message):
     print(message)
+    address = message.text
+    user_id = message.from_user.id
+    new_user = User.objects.get(user_id=user_id)
+    new_user.update(address_company=address)
+    new_user.save()
     bot.send_message(message.chat.id, "Спасибо за регистрацию, теперь можно приступить к заказам!\nПерейдите в Категории для выбора продуктов.")
 
 
