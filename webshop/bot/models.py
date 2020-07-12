@@ -122,6 +122,12 @@ def fill_db():
     Products.objects.create(title='Яйцо кур.', description='Яйцо куриное', price=100 , category='Бакалея, крупы, яйцо')
     Products.objects.create(title='Масло подс.', description='Масло подсолнечное', price=100 , category='Бакалея, крупы, яйцо')
 
+    Category.objects.create(title="Овощи", description="Помидор, Огурец, Баклажан, Морковь, Капуста")
+    Category.objects.create(title="Фрукты", description="Яблоко, Черешня, Груша, Виноград, Слива")
+    Category.objects.create(title="Зелень", description="Укроп, Петрушка, Руккола, Базилик, Тимьян, Розмарин")
+    Category.objects.create(title="Цитрусы", description="Апельсин, Лимон, Манго, Авокадо, Ананас, Лайм")
+    Category.objects.create(title="Консервация", description="Томат в собственном соку, Огурец соленый, Ананас консервированный, Томат, Кетчуп, Топинг малиновый")
+    Category.objects.create(title="Бакалея, крупы, яйцо", description="Соль, Сахар, Мука, Рис Басмати, Крохмал кукурузный, Яйцо куриное, Масло подсолнечное ")
 
 if __name__ == '__main__':
     fill_db()
