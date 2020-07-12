@@ -6,6 +6,7 @@
 # from keyboards import START_KB, CATEGORIES_KB
 # from lookups import category_lookup, separator
 
+
 from telebot import TeleBot
 from telebot.types import ReplyKeyboardMarkup, KeyboardButton, InlineKeyboardMarkup, InlineKeyboardButton
 # import config
@@ -13,9 +14,9 @@ from . import models, keyboards
 from .models import Text, Products, Category, Cart, User
 from .keyboards import START_KB, CATEGORIES_KB
 from .lookups import category_lookup, separator, product_lookup, korzina_lookup, prod_discount_lookup, cart_lookup, order_lookup
+from .config import TOKEN
 
-
-bot = TeleBot("1155368557:AAFKQ1HoAJKffzFOyzD7IFUwIHpCQwT8v_k")
+bot = TeleBot(TOKEN)
 
 
 @bot.message_handler(content_types=['text'], func=lambda message: message.text == START_KB['my_cart'])
