@@ -151,7 +151,7 @@ def prod_discount__click(call):
     print(prod_id)
     kb = InlineKeyboardMarkup()
     product = Products.objects.get(id=prod_id)
-    button = [InlineKeyboardButton(f'Заказать - {product.title}', callback_data=f'{korzina_lookup}{separator}{product.id}')]
+    button = [InlineKeyboardButton(f'Заказать - {product.title}', callback_data=f'{korzina_lookup}{separator}{prod_id}{separator}{prod_id}')]
     kb.add(*button)
     bot.send_message(call.message.chat.id, f"Описание товара:\n\nНазвание товара: {product.title}\nОписание товара: {product.description}\nЦена товара: {product.price}\nСкидка на товар: {product.discount}", reply_markup=kb)
 
