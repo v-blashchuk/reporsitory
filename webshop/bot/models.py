@@ -129,36 +129,36 @@ def fill_db():
     # Category.objects.create(title="Консервация", description="Томат в собственном соку, Огурец соленый, Ананас консервированный, Томат, Кетчуп, Топинг малиновый")
     # Category.objects.create(title="Бакалея, крупы, яйцо", description="Соль, Сахар, Мука, Рис Басмати, Крохмал кукурузный, Яйцо куриное, Масло подсолнечное ")
 
-    ovochi = Category.objects(title="Овощи").first()
-    frukti = Category.objects(title="Фрукты").first()
-    zelen = Category.objects(title="Зелень").first()
-    citrus = Category.objects(title="Цитрусы").first()
-    konserv = Category.objects(title="Консервация").first()
-    bakaleya = Category.objects(title="Бакалея, крупы, яйцо").first()
+    # ovochi = Category.objects(title="Овощи").first()
+    # frukti = Category.objects(title="Фрукты").first()
+    # zelen = Category.objects(title="Зелень").first()
+    # citrus = Category.objects(title="Цитрусы").first()
+    # konserv = Category.objects(title="Консервация").first()
+    # bakaleya = Category.objects(title="Бакалея, крупы, яйцо").first()
 
-    print(ovochi.id)
-    print(frukti.id)
-    print(zelen.id)
-    print(citrus.id)
-    print(konserv.id)
-    print(bakaleya.id)
+    # print(ovochi.id)
+    # print(frukti.id)
+    # print(zelen.id)
+    # print(citrus.id)
+    # print(konserv.id)
+    # print(bakaleya.id)
 
 
-    new_1 = Products.objects(title__in=["Помидор", "Огурец", "Баклажан", "Морковь", "Капуста"]).all()
-    new_2 = Products.objects(title__in=["Яблоко", "Груша", "Виноград", "Слива", "Капуста"]).all()
-    new_3 = Products.objects(title__in=["Укроп", "Петрушка", "Руккола", "Базилик", "Тимьян", "Розмарин"]).all()
-    new_4 = Products.objects(title__in=["Апельсин", "Лимон", "Манго", "Авокадо", "Ананас", "Лайм"]).all()
-    new_5 = Products.objects(title__in=["Томат в соб. соку", "Огурец сол.", "Ананас консерв.", "Томат", "Кетчуп", "Топинг малин."]).all()
-    new_6 = Products.objects(title__in=["Соль", "Сахар", "Мука", "Рис басм.", "Крохмал кукур.", "Яйцо кур.", "Масло подс."]).all()
+    # new_1 = Products.objects(title__in=["Помидор", "Огурец", "Баклажан", "Морковь", "Капуста"]).all()
+    # new_2 = Products.objects(title__in=["Яблоко", "Груша", "Виноград", "Слива", "Капуста"]).all()
+    # new_3 = Products.objects(title__in=["Укроп", "Петрушка", "Руккола", "Базилик", "Тимьян", "Розмарин"]).all()
+    # new_4 = Products.objects(title__in=["Апельсин", "Лимон", "Манго", "Авокадо", "Ананас", "Лайм"]).all()
+    # new_5 = Products.objects(title__in=["Томат в соб. соку", "Огурец сол.", "Ананас консерв.", "Томат", "Кетчуп", "Топинг малин."]).all()
+    # new_6 = Products.objects(title__in=["Соль", "Сахар", "Мука", "Рис басм.", "Крохмал кукур.", "Яйцо кур.", "Масло подс."]).all()
 
-    Products.objects.update(category=zelen.id)
+    # Products.objects.update(category=zelen.id)
 
-    new_1.update(category=ovochi.id)
-    new_2.update(category=frukti.id)
-    new_3.update(category=zelen.id)
-    new_4.update(category=citrus.id)
-    new_5.update(category=konserv.id)
-    new_6.update(category=bakaleya.id)
+    # new_1.update(category=ovochi.id)
+    # new_2.update(category=frukti.id)
+    # new_3.update(category=zelen.id)
+    # new_4.update(category=citrus.id)
+    # new_5.update(category=konserv.id)
+    # new_6.update(category=bakaleya.id)
 
     # new_1.save()
     # new_2.save()
@@ -166,6 +166,11 @@ def fill_db():
     # new_4.save()
     # new_5.save()
     # new_6.save()
+
+    new_1 = Products.objects(title__in=["Помидор", "Огурец", "Баклажан", "Морковь", "Капуста"]).all()
+    new_1.update(discount=10)
+
+
 
 if __name__ == '__main__':
     fill_db()
